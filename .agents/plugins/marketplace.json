@@ -1,0 +1,20 @@
+{
+  "name": "kalkazuorg",
+  "interface": {
+    "displayName": "Kalkazu.org"
+  },
+  "plugins": [
+    {
+      "name": "lib-builder",
+      "source": {
+        "source": "local",
+        "path": "./lib-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
