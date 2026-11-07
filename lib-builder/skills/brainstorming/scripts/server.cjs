@@ -103,17 +103,10 @@ const SESSION_DIR = process.env.BRAINSTORM_DIR || '/tmp/brainstorm';
 const CONTENT_DIR = path.join(SESSION_DIR, 'content');
 const STATE_DIR = path.join(SESSION_DIR, 'state');
 const LIB_BUILDER_VERSION = readLibBuilderVersion();
-const LIB_BUILDER_BRAND_IMAGE_URL = 'https://primeradiant.com/brand/lib-builder-visual-brainstorming-logo.png';
-const TELEMETRY_DISABLE_ENV_VARS = [
-  'LIB_BUILDER_DISABLE_TELEMETRY',
-  'DISABLE_TELEMETRY',
-  'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC'
-];
-// Opt-in: the remote logo loads only with LIB_BUILDER_ENABLE_TELEMETRY set,
-// and any opt-out above still wins.
-const LIB_BUILDER_TELEMETRY_DISABLED =
-  !isTruthyEnv(process.env.LIB_BUILDER_ENABLE_TELEMETRY) ||
-  TELEMETRY_DISABLE_ENV_VARS.some(name => isTruthyEnv(process.env[name]));
+// No telemetry: the companion pages load nothing from outside this server.
+const BRAND_URL = 'https://kalkazu.org';
+// The Kalkazu.org symbol ships with the plugin and is inlined as a data URI.
+const BRAND_LOGO_DATA_URI = readBrandLogo();
 let ownerPid = process.env.BRAINSTORM_OWNER_PID ? Number(process.env.BRAINSTORM_OWNER_PID) : null;
 
 // Per-session secret key. The companion is reachable by any local browser tab
@@ -172,7 +165,8 @@ h1 { color: #333; } p { color: #666; }
 .brand { display: flex; align-items: center; min-width: 0; overflow: hidden; margin-bottom: 1.5rem; color: #666; font-size: 0.9rem; line-height: 1; }
 .brand a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; min-width: 0; max-width: 100%; line-height: 1; }
 .brand-copy { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1; transform: translateY(-1px); }
-.brand-logo { display: block; height: 1em; width: auto; max-width: 180px; filter: invert(1); }
+.brand-logo { display: block; height: 1.7em; width: auto; flex-shrink: 0; filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.9)) brightness(0.8) contrast(1.3); }
+.brand-name { flex-shrink: 0; font-weight: 600; color: #333; }
 </style>
 </head>
 <body><!-- BRANDING --><h1>Brainstorm Companion</h1>
@@ -228,13 +222,6 @@ function readLibBuilderVersion() {
   return 'unknown';
 }
 
-function isTruthyEnv(value) {
-  if (!value) return false;
-  const normalized = String(value).trim().toLowerCase();
-  if (!normalized) return false;
-  return !['0', 'false', 'no', 'off'].includes(normalized);
-}
-
 function escapeHtmlText(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -243,16 +230,22 @@ function escapeHtmlText(value) {
     .replace(/"/g, '&quot;');
 }
 
+function readBrandLogo() {
+  try {
+    const bytes = fs.readFileSync(path.join(__dirname, 'kalkazuorg-logo.png'));
+    return 'data:image/png;base64,' + bytes.toString('base64');
+  } catch (e) {
+    return '';
+  }
+}
+
 function brandMarkup() {
   const version = escapeHtmlText(LIB_BUILDER_VERSION);
-  const text = LIB_BUILDER_TELEMETRY_DISABLED
-    ? 'Prime Radiant lib-builder v' + version
-    : 'lib-builder v' + version;
-  const logo = LIB_BUILDER_TELEMETRY_DISABLED
-    ? ''
-    : '<img class="brand-logo" src="' + LIB_BUILDER_BRAND_IMAGE_URL + '?v=' + encodeURIComponent(LIB_BUILDER_VERSION) + '" alt="Prime Radiant" referrerpolicy="no-referrer" decoding="async">';
-
-  return '<div class="brand"><a href="https://github.com/obra/superpowers">' + logo + '<span class="brand-copy">' + text + '</span></a></div>';
+  const logo = BRAND_LOGO_DATA_URI
+    ? '<img class="brand-logo" src="' + BRAND_LOGO_DATA_URI + '" alt="" width="53" height="64">'
+    : '';
+  return '<div class="brand"><a href="' + BRAND_URL + '" title="Kalkazu.org">' + logo +
+    '<span class="brand-name">kalkazu.org</span><span class="brand-copy">lib-builder v' + version + '</span></a></div>';
 }
 
 function renderBranding(html) {

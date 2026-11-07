@@ -1,405 +1,173 @@
 # lib-builder
 
-lib-builder is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
+**Based on [Superpowers](https://github.com/obra/superpowers) by [Jesse Vincent](https://blog.fsck.com) · improved by [Kalkazu.org](https://kalkazu.org)**
+
+lib-builder is a complete software development methodology for your coding agent, built on a set of composable skills and a short set of starting instructions that make sure your agent uses them. It works in **Claude Code** and **Codex**.
+
+It started from Superpowers 7.0.1 (MIT). We audited it, measured it on a fixed set of tasks, made three improvements, added three new skills and measured again before releasing it. The original license and credit stay in [LICENSE](LICENSE).
 
 ## Table of Contents
 
 - [How it works](#how-it-works)
-- [Commercial Services](#commercial-services)
-- [Getting Started](#installation)
-  - [Claude Code](#claude-code)
-  - [Antigravity](#antigravity)
-  - [Codex App](#codex-app)
-  - [Codex CLI](#codex-cli)
-  - [Cursor](#cursor)
-  - [Devin CLI](#devin-cli)
-  - [Factory Droid](#factory-droid)
-  - [Gemini CLI](#gemini-cli)
-  - [GitHub Copilot CLI](#github-copilot-cli)
-  - [Grok Build CLI](#grok-build-cli)
-  - [Kimi Code](#kimi-code)
-  - [OpenCode](#opencode)
-  - [Pi](#pi)
-  - [Qwen Code](#qwen-code)
-  - [Hermes Agent](#hermes-agent)
-  - [Muse](#muse)
-- [The Basic Workflow](#the-basic-workflow)
-- [When Something Goes Wrong](#when-something-goes-wrong)
-- [Community](#community)
-- [What's Inside](#whats-inside)
+- [Installation](#installation)
+- [What we changed](#what-we-changed)
+- [How we measured it](#how-we-measured-it)
+- [The basic workflow](#the-basic-workflow)
+- [When something goes wrong](#when-something-goes-wrong)
+- [What's inside](#whats-inside)
 - [Philosophy](#philosophy)
-- [Contributing](#contributing)
-- [Updating](#updating)
+- [Issues and contributing](#issues-and-contributing)
+- [No telemetry](#no-telemetry)
 - [License](#license)
-- [Visual companion telemetry](#visual-companion-telemetry)
 
 ## How it works
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into writing code. Instead, it steps back and asks you what you're really trying to do.
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+Once it has teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest.
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+After you've signed off on the design, your agent puts together an implementation plan clear enough for an enthusiastic junior engineer with no project context to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It) and DRY.
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for your agent to work autonomously for a couple hours at a time without deviating from the plan you put together.
+Once you say "go", it works through the plan task by task, reviewing its own work as it goes. Before a commit it checks the staged files for secrets, and before a long conversation runs out it can leave a handoff that a fresh session can pick up from its path alone.
 
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has lib-builder.
-
-## Commercial Services
-
-If you're using lib-builder in enterprise and could benefit from commercial support, additional tooling, or managed spending, please don't hesitate to drop us a line at sales@primeradiant.com.
+Because the skills trigger automatically, you don't need to do anything special. Your coding agent just has lib-builder.
 
 ## Installation
 
-Installation differs by harness. If you use more than one, install lib-builder separately for each one.
+If you use both agents, install lib-builder in each one. If you already have Superpowers installed, disable it first: both ship skills with the same names.
 
 ### Claude Code
 
-lib-builder is available via the [official Claude plugin marketplace](https://claude.com/plugins/lib-builder)
-
-#### Official Marketplace
-
-- Install the plugin from Anthropic's official marketplace:
-
-  ```bash
-  /plugin install lib-builder@claude-plugins-official
-  ```
-
-#### lib-builder Marketplace
-
-The lib-builder marketplace provides lib-builder and some other related plugins for Claude Code.
-
-- Register the marketplace:
-
-  ```bash
-  /plugin marketplace add obra/superpowers-marketplace
-  ```
-
-- Install the plugin from this marketplace:
-
-  ```bash
-  /plugin install lib-builder@lib-builder-marketplace
-  ```
-
-### Antigravity
-
-Install lib-builder as a plugin from this repository:
-
 ```bash
-agy plugin install https://github.com/obra/superpowers
+/plugin marketplace add kalkazuorg/skills
+/plugin install lib-builder@kalkazuorg
 ```
 
-Antigravity lists each installed skill's description, and the description of
-the `using-lib-builder` skill prompts the model to load that skill at the start
-of a conversation. Reinstall with the same command to update.
+Start a new session afterwards. To check it works, send `Let's make a react todo list`: a working install triggers `brainstorming` before any code is written.
 
-### Codex App
+Update later with `/plugin marketplace update kalkazuorg`.
 
-lib-builder is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
-
-- In the Codex app, click on Plugins in the sidebar.
-- You should see `lib-builder` in the Coding section.
-- Click the `+` next to lib-builder and follow the prompts.
-
-### Codex CLI
-
-lib-builder is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
-
-- Open the plugin search interface:
-
-  ```bash
-  /plugins
-  ```
-
-- Search for lib-builder:
-
-  ```bash
-  lib-builder
-  ```
-
-- Select `Install Plugin`.
-
-### Cursor
-
-- In Cursor Agent chat, install from marketplace:
-
-  ```text
-  /add-plugin lib-builder
-  ```
-
-- Or search for "lib-builder" in the plugin marketplace.
-
-### Devin CLI
-
-- Install the plugin from this repository:
-
-  ```bash
-  devin plugins install obra/superpowers
-  ```
-
-- Update to the latest version with:
-
-  ```bash
-  devin plugins update lib-builder
-  ```
-
-### Factory Droid
-
-- Register the marketplace:
-
-  ```bash
-  droid plugin marketplace add https://github.com/obra/superpowers
-  ```
-
-- Install the plugin:
-
-  ```bash
-  droid plugin install lib-builder@lib-builder
-  ```
-
-### Gemini CLI
-
-- Install the extension:
-
-  ```bash
-  gemini extensions install https://github.com/obra/superpowers
-  ```
-
-- Update later:
-
-  ```bash
-  gemini extensions update lib-builder
-  ```
-
-### GitHub Copilot CLI
-
-- Register the marketplace:
-
-  ```bash
-  copilot plugin marketplace add obra/superpowers-marketplace
-  ```
-
-- Install the plugin:
-
-  ```bash
-  copilot plugin install lib-builder@lib-builder-marketplace
-  ```
-
-### Grok Build CLI
-
-lib-builder is available via the [official Grok plugin marketplace](https://github.com/xai-org/plugin-marketplace).
-
-- Install the plugin from xAI's official marketplace:
-
-  ```bash
-  grok plugin install lib-builder@xai-official --trust
-  ```
-
-- Or open the marketplace in the TUI, search for lib-builder, and install it:
-
-  ```text
-  /marketplace
-  ```
-
-### Kimi Code
-
-lib-builder is available in Kimi Code's plugin marketplace.
-
-- Open Kimi Code's plugin manager:
-
-  ```text
-  /plugins
-  ```
-
-- Go to `Marketplace` > `lib-builder` and install it.
-
-- Or install directly from this repository:
-
-  ```text
-  /plugins install https://github.com/obra/superpowers
-  ```
-
-- Detailed docs: [docs/README.kimi.md](docs/README.kimi.md)
-
-### OpenCode
-
-OpenCode uses its own plugin install; install lib-builder separately even if you
-already use it in another harness.
-
-- Tell OpenCode:
-
-  ```
-  Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-  ```
-
-- Detailed docs: [docs/README.opencode.md](docs/README.opencode.md)
-
-### Pi
-
-Install lib-builder as a Pi package from this repository:
+### Codex
 
 ```bash
-pi install git:github.com/obra/superpowers
+codex plugin marketplace add kalkazuorg/skills
+codex plugin add lib-builder@kalkazuorg
 ```
 
-For local development, run Pi with this checkout loaded as a temporary package:
+Start a new Codex session afterwards. Codex loads the 18 skills natively and picks them by their descriptions; lib-builder does not register a session-start hook on Codex.
 
-```bash
-pi -e /path/to/lib-builder
-```
+Update later with `codex plugin marketplace upgrade kalkazuorg`.
 
-The Pi package loads the lib-builder skills and a small extension that injects the `using-lib-builder` bootstrap at session startup and again after compaction. Pi has native skills, so no compatibility `Skill` tool is required. Subagent and task-list tools remain optional Pi companion packages.
+## What we changed
 
-### Qwen Code
+Compared with Superpowers 7.0.1:
 
-Qwen Code installs plugins from Claude Code marketplaces directly.
+**Improvements**
+- **No telemetry.** The visual companion no longer loads a logo from the original authors' website. Its pages load nothing from outside your computer (see [below](#no-telemetry)).
+- **A skill applies only when its description fits.** The starting instructions now say that a skill is relevant when its "use when" matches the situation, not when its name sounds close. In the original, a review-only question pulled in a diff-review skill with no diff to review and cost 4× for the same answer.
+- **Worktrees ask first.** `using-git-worktrees` asks before installing dependencies or committing a `.gitignore` change.
 
-- Install the plugin from this repository, and pick `lib-builder` when prompted:
+**New skills**
+- **checking-for-secrets-before-commit** – runs the tests, then scans the staged set for keys, tokens and secret files before committing, never printing a value. Includes the `check-secrets` script (24/24 tests).
+- **writing-a-handoff** – writes a continuation document a new session can act on from its path alone.
+- **previewing-visual-changes** – shows visibly different previews before changing how anything looks, and implements only the one your human partner picks.
 
-  ```bash
-  qwen extensions install obra/superpowers
-  ```
+**Packaging**
+- Renamed to lib-builder (skills are `lib-builder:<skill>`, settings are `LIB_BUILDER_*`).
+- Released for Claude Code and Codex. The integrations for other agents were removed until they are tested.
 
-- Update later:
+See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
-  ```bash
-  qwen extensions update lib-builder
-  ```
+## How we measured it
 
-### Hermes Agent
+The same 11 tasks ran in isolated Claude Code sessions with three setups: no plugin, Superpowers 7.0.1, and lib-builder. Tasks T1–T8 cover everyday work (a simple question, a rename, failing tests, a new feature, a code review, a new module, a bug hunt, "verify and commit"). T9–T11 cover the new skills (a secret in the commit, a handoff, a visual change).
 
-Install lib-builder as a Hermes plugin from this repository:
+| | No plugin | Superpowers 7.0.1 | lib-builder |
+|---|---|---|---|
+| Tasks passed (main run) | 9/11 | 9/11 | 9/11 |
+| Handoff (T10) | ✗ | ✗ | ✓ |
+| Visual preview first (T11) | ✗ | ✗ | ✓ |
+| Feature task T4, retested 3× | – | 1/3 | 3/3 |
+| "Verify and commit" T8, retested 3× after the fix | – | – | 3/3 |
+| Cost, main run (API-equivalent) | $1.63 | $2.58 | **$2.39** |
 
-```bash
-hermes plugins install obra/superpowers --enable
-```
+What this means:
 
-Restart any active Hermes sessions after installing. Note: Hermes has no
-post-compaction hook, so a very long session that compacts over its first
-turn loses the bootstrap — start a fresh session if skills stop triggering.
+- lib-builder does everything the original does, and it is about 7% cheaper. The biggest savings came on simple questions, new features and bug hunts.
+- It adds two abilities neither other setup had: handoffs and visual previews before changing anything.
+- It still costs about 1.5× more than using no plugin. What that buys is regression tests and a process that holds.
+- The first run showed the new secrets skill skipping the test run on "verify and commit". We fixed it and retested it 3/3.
 
-### Muse
+Limits: the main run was a single pass per task, and only the doubtful tasks were retested three times. **All measurements ran in Claude Code.** On Codex we have verified that lib-builder installs and that all 18 skills reach the model; behavior on Codex has not been measured yet.
 
-lib-builder is available as a native Muse plugin — same repo, same skills, all harnesses. The `using-lib-builder` bootstrap is injected via the native `SessionStart` hook alongside Claude Code, Codex, Cursor, Gemini, Pi, and the rest — no per-session opt-in.
+## The basic workflow
 
-- Install from a local checkout:
+1. **brainstorming** – Activates before building anything. Draws out what you actually want, and why, then plays its understanding back for correction. Small changes get agreed in chat; projects get a written design document.
+2. **using-git-worktrees** – Activates after design approval. Creates an isolated workspace on a new branch, asks before installing dependencies, and checks for a clean test baseline.
+3. **writing-plans** – Activates with an approved design. Breaks the work into bite-sized tasks (2–5 minutes each), each with exact file paths, complete code and verification steps.
+4. **subagent-driven-development** or **executing-plans** – Activates with a plan. Either dispatches a fresh subagent per task with a review after each (most thorough), or implements every task inline with one review of the whole branch at the end (cheapest).
+5. **test-driven-development** – Activates during implementation. Enforces RED-GREEN-REFACTOR: write a failing test, watch it fail, write minimal code, watch it pass, commit.
+6. **requesting-code-review** – Activates between tasks. Reviews against the plan and reports issues by severity.
+7. **checking-for-secrets-before-commit** – Activates before a commit. Runs the tests, then scans what is staged for secrets.
+8. **finishing-a-development-branch** – Activates when the tasks are done. Verifies the tests, presents the options (merge, PR, keep, discard) and cleans up the worktree.
 
-  ```bash
-  muse plugins install ./
-  muse plugins approve lib-builder
-  ```
+## When something goes wrong
 
-  Or clone and install:
+Sometimes a session misbehaves: a skill fires when it shouldn't, stays silent when it should, or the agent ignores its plan or burns more tokens than you'd expect. Ask your coding agent to "figure out what went wrong with lib-builder in this session" and it will invoke **diagnosing-lib-builder**. To examine an earlier session, name it: "figure out what went wrong with lib-builder in session `<id>`".
 
-  ```bash
-  git clone https://github.com/obra/superpowers.git
-  muse plugins install ./lib-builder
-  muse plugins approve lib-builder
-  ```
+The skill reads the session transcript, reports what happened with line-level evidence and, if you want, packages a scrubbed bundle for a bug report.
 
-- Update later:
-
-  ```bash
-  muse plugins update lib-builder
-  ```
-
-Restart any active Muse sessions after installing so the `SessionStart` hook takes effect — skills are active immediately, hooks require approval on first install. To verify, start a fresh session and send `Let's make a react todo list` — a working install auto-triggers `brainstorming` before any code is written. Version is tracked in `.version-bump.json` so `scripts/bump-version.sh` keeps it in sync.
-
-## The Basic Workflow
-
-1. **brainstorming** - Activates before building anything. Draws out what you actually want, and why, through questions that get you describing it, then plays its understanding back for correction. Small changes get agreed in chat; projects get a written design document a builder could plan from.
-
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
-
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
-
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Either dispatches a fresh subagent per task with a review after each (most thorough), or implements every task inline in the current session with one fresh review of the whole branch at the end (cheapest).
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
-
-## When Something Goes Wrong
-
-Sometimes a session misbehaves: a skill fires when it shouldn't, stays silent when it should, or the agent ignores its plan, repeats work, or burns more tokens than you'd expect. Ask your coding agent to "figure out what went wrong with lib-builder in this session" and it will invoke the **diagnosing-lib-builder** skill. To examine an earlier session, name it: "figure out what went wrong with lib-builder in session `<id>`".
-
-The skill reads the session transcript, reports what happened with line-level evidence, and, if you want, packages a scrubbed bundle for a bug report.
-
-## Community
-
-lib-builder is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
-
-- **Discord**: [Join us](https://discord.gg/35wsABTejz) for community support, questions, and sharing what you're building with lib-builder
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/lib-builder/) to get notified about new versions
-
-## What's Inside
-
-### Skills Library
+## What's inside
 
 **Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
+- **test-driven-development** – RED-GREEN-REFACTOR cycle (includes a testing anti-patterns reference)
 
 **Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
-- **diagnosing-lib-builder** - Work out what went wrong in a session, with evidence; export a scrubbed bundle or file an issue
+- **systematic-debugging** – 4-phase root cause process (root-cause tracing, defense in depth, condition-based waiting)
+- **verification-before-completion** – Make sure it's actually fixed
+- **diagnosing-lib-builder** – Work out what went wrong in a session, with evidence; export a scrubbed bundle or file an issue
 
-**Collaboration** 
-- **brainstorming** - Drawing out intent before building
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Inline plan execution: one context, one final review
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
-- **previewing-visual-changes** - Show visibly different previews before changing how anything looks; implement only the pick
-- **writing-a-handoff** - Continuation document a new session can act on from its path alone
+**Collaboration**
+- **brainstorming** – Drawing out intent before building
+- **writing-plans** – Detailed implementation plans
+- **executing-plans** – Inline plan execution: one context, one final review
+- **dispatching-parallel-agents** – Concurrent subagent workflows
+- **requesting-code-review** – Pre-review checklist
+- **receiving-code-review** – Responding to feedback
+- **using-git-worktrees** – Parallel development branches
+- **finishing-a-development-branch** – Merge/PR decision workflow
+- **subagent-driven-development** – Fast iteration with two-stage review (spec compliance, then code quality)
+- **previewing-visual-changes** – Visibly different previews before changing how anything looks *(new)*
+- **writing-a-handoff** – A continuation document a new session can act on from its path alone *(new)*
 
 **Safety**
-- **checking-for-secrets-before-commit** - Scan the staged set for keys, tokens and secret files before committing, never printing a value
+- **checking-for-secrets-before-commit** – Scan the staged set for keys, tokens and secret files before committing, never printing a value *(new)*
 
 **Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-lib-builder** - Introduction to the skills system
+- **writing-skills** – Create new skills following best practices (includes testing methodology)
+- **using-lib-builder** – Introduction to the skills system
 
 ## Philosophy
 
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
+- **Test-driven development** – Write tests first, always
+- **Systematic over ad hoc** – Process over guessing
+- **Complexity reduction** – Simplicity as the primary goal
+- **Evidence over claims** – Verify before declaring success
 
-Read [the original release announcement](https://blog.fsck.com/2025/10/09/lib-builder/).
+Read [the original Superpowers announcement](https://blog.fsck.com/2025/10/09/superpowers/) by Jesse Vincent.
 
-## Contributing
+## Issues and contributing
 
-The general contribution process for lib-builder is below. Keep in mind that we don't generally accept contributions of new skills and that any updates to skills must work across all of the coding agents we support. We also don't accept agent-written PRs that fix issues filed by someone else unless a maintainer asked for one, even when you hit the same problem; add your report to the existing issue instead.
+lib-builder lives in [kalkazuorg/skills](https://github.com/kalkazuorg/skills) next to other Kalkazu.org skills. Report problems in [its issues](https://github.com/kalkazuorg/skills/issues) and start the title with `[lib-builder]`.
 
-1. Fork the repository
-2. Switch to the 'dev' branch
-3. Create a branch for your work
-4. Follow the `writing-skills` skill for creating and testing new and modified skills
-5. Submit a PR, filling in every section of the pull request template, including the summary a human writes in their own words.
+Every change to a skill is measured before and after, on the same tasks, before it is released. Follow the `writing-skills` skill when you change or add a skill. Problems that also exist in the original Superpowers belong in [obra/superpowers](https://github.com/obra/superpowers/issues).
 
-Skill-behavior tests use the drill eval harness from [lib-builder-evals](https://github.com/prime-radiant-inc/lib-builder-evals/), cloned into `evals/` — see `evals/README.md` for setup. Plugin-infrastructure tests live at `tests/` and run via the relevant `run-*.sh` or `npm test`.
+Plugin infrastructure tests live in `tests/` and run with the relevant `test-*.sh` script or `node <file>.test.js`.
 
-See `skills/writing-skills/SKILL.md` for the complete guide.
+## No telemetry
 
-## Updating
-
-lib-builder updates are somewhat coding-agent dependent, but are often automatic.
+lib-builder collects nothing. In Superpowers, the visual companion of `brainstorming` loaded its logo from the original authors' website, which let them count users. lib-builder removed that: the Kalkazu.org symbol in the companion's corner ships inside the plugin, and its pages load nothing from outside your computer. There is no setting to turn it back on.
 
 ## License
 
-MIT License - see LICENSE file for details
-
-## Visual companion telemetry
-
-Because skills and plugins don't provide any feedback to creators, we have no idea how many of you are using lib-builder. In this version, telemetry is **off by default**: the visual companion shows the Prime Radiant branding as local text and makes no request to any outside website. To help the original authors count users, set `LIB_BUILDER_ENABLE_TELEMETRY` to any true value; the Prime Radiant logo is then loaded from their website with the lib-builder version in use. It does not include any details about your project, prompt, or coding agent. Any opt-out still wins over the opt-in: `LIB_BUILDER_DISABLE_TELEMETRY`, Claude Code's `DISABLE_TELEMETRY` and `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`.
+MIT. See [LICENSE](LICENSE). Superpowers is copyright Jesse Vincent; the changes in lib-builder are by Kalkazu.org under the same license.

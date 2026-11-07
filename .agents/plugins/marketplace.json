@@ -1,14 +1,14 @@
 {
-  "name": "lib-builder-dev",
+  "name": "kalkazuorg",
   "interface": {
-    "displayName": "lib-builder Dev"
+    "displayName": "Kalkazu.org"
   },
   "plugins": [
     {
       "name": "lib-builder",
       "source": {
-        "source": "url",
-        "url": "./"
+        "source": "local",
+        "path": "./lib-builder"
       },
       "policy": {
         "installation": "AVAILABLE",

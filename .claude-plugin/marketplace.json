@@ -1,6 +1,6 @@
 {
-  "name": "lib-builder-dev",
-  "description": "Development marketplace for lib-builder",
+  "name": "kalkazuorg",
+  "description": "Skills and plugins from Kalkazu.org, audited and measured before release",
   "owner": {
     "name": "Kalkazu.org",
     "url": "https://kalkazu.org"
@@ -9,8 +9,8 @@
     {
       "name": "lib-builder",
       "description": "Skills library for coding agents: TDD, debugging, planning, secret checks before commit, handoffs and visual previews. Based on Superpowers by Jesse Vincent, improved by Kalkazu.org",
-      "version": "7.0.1",
-      "source": "./",
+      "version": "1.0.0",
+      "source": "./lib-builder",
       "author": {
         "name": "Kalkazu.org",
         "url": "https://kalkazu.org"
