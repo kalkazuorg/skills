@@ -1,0 +1,20 @@
+{
+  "name": "lib-builder-dev",
+  "interface": {
+    "displayName": "lib-builder Dev"
+  },
+  "plugins": [
+    {
+      "name": "lib-builder",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
